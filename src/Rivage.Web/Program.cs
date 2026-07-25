@@ -60,9 +60,13 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "Database migration/seed failed");
+        logger.LogError(ex, "Database migration/seed failed: {Message}", ex.Message);
         if (!app.Environment.IsDevelopment())
-            throw;
+            throw new InvalidOperationException(
+                "Startup failed while connecting to the database. " +
+                "On Railway, ensure Postgres is in the same project and the web service has DATABASE_URL " +
+                "(or ConnectionStrings__DefaultConnection) set via Variable Reference. " +
+                $"Inner error: {ex.Message}", ex);
     }
 }
 
