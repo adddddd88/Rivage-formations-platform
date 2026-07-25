@@ -1,0 +1,35 @@
+@model PagedResult<Category>
+@{
+    ViewData["Title"] = "Catégories";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+    <h2>Catégories</h2>
+    <a class="btn btn-primary btn-sm" href="/Admin/Categories/Create">Nouvelle</a>
+</div>
+<form method="get" class="panel" style="display:flex;gap:.75rem;margin:1rem 0">
+    <input type="text" name="search" value="@Model.Search" placeholder="Rechercher…" />
+    <button class="btn btn-ghost" type="submit">Filtrer</button>
+</form>
+<div class="panel">
+    <table>
+        <thead><tr><th>Nom</th><th>Slug</th><th>Active</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var c in Model.Items)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td>@c.Slug</td>
+                <td>@(c.IsActive ? "Oui" : "Non")</td>
+                <td style="display:flex;gap:.35rem">
+                    <a class="btn btn-ghost btn-sm" href="/Admin/Categories/Edit/@c.Id">Modifier</a>
+                    <form method="post" action="/Admin/Categories/Delete/@c.Id" onsubmit="return confirm('Supprimer ?')">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

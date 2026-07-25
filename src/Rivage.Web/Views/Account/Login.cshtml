@@ -1,0 +1,19 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Connexion";
+}
+<div class="container section">
+    <h2>Connexion</h2>
+    <p class="lede">Accédez à votre espace Rivage.</p>
+    <form asp-action="Login" method="post" class="form-stack panel">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="ReturnUrl" />
+        <label asp-for="Email"><span>Email</span><input asp-for="Email" /></label>
+        <label asp-for="Password"><span>Mot de passe</span><input asp-for="Password" /></label>
+        <label style="display:flex;align-items:center;gap:.5rem;font-weight:600">
+            <input asp-for="RememberMe" /> Se souvenir de moi
+        </label>
+        <button class="btn btn-primary" type="submit">Se connecter</button>
+        <p class="meta">Pas encore de compte ? <a asp-action="Register">S'inscrire</a></p>
+    </form>
+</div>

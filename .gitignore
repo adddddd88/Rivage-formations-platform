@@ -1,0 +1,35 @@
+# Build
+bin/
+obj/
+out/
+publish/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE
+.vs/
+.idea/
+*.swp
+*~
+
+# Env & secrets
+.env
+.env.local
+*.pfx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test results
+TestResults/
+coverage/
+
+# Docker volumes (local)
+.docker-data/

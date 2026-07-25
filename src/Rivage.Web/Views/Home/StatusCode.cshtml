@@ -1,0 +1,9 @@
+@{
+    ViewData["Title"] = "Introuvable";
+    var code = ViewBag.Code ?? 404;
+}
+<div class="container section">
+    <h2>@code</h2>
+    <p class="lede">Cette page n'existe pas ou n'est plus disponible.</p>
+    <a class="btn btn-primary" asp-action="Index">Retour</a>
+</div>

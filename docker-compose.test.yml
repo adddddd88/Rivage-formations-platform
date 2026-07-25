@@ -1,0 +1,28 @@
+services:
+  db-test:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: rivage
+      POSTGRES_PASSWORD: Rivage_Test_S3cure!
+      POSTGRES_DB: RivageTestDb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rivage -d RivageTestDb"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  tests:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    working_dir: /src
+    volumes:
+      - ./:/src
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=db-test;Port=5432;Database=RivageTestDb;Username=rivage;Password=Rivage_Test_S3cure!"
+      ASPNETCORE_ENVIRONMENT: Development
+    depends_on:
+      db-test:
+        condition: service_healthy
+    command: >
+      bash -c "dotnet restore Rivage.sln &&
+               dotnet test tests/Rivage.Tests/Rivage.Tests.csproj --verbosity normal"

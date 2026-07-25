@@ -1,0 +1,52 @@
+@model IEnumerable<Enrollment>
+@{
+    ViewData["Title"] = "Mon parcours";
+    var attempts = (IEnumerable<QuizAttempt>)ViewBag.Attempts;
+}
+<div class="container section">
+    <h2>Mon parcours</h2>
+    <p class="lede">Vos formations, progression et résultats.</p>
+
+    <div class="grid grid-2">
+        @foreach (var e in Model)
+        {
+            <article class="panel">
+                <span class="badge">@e.Formation.Category.Name</span>
+                <h3>@e.Formation.Title</h3>
+                <p class="meta">Inscrit le @e.EnrolledAt.ToLocalTime().ToString("dd/MM/yyyy") · @e.Status</p>
+                <div class="progress" aria-label="Progression"><span style="width:@e.ProgressPercent%"></span></div>
+                <p class="meta">@e.ProgressPercent %</p>
+                <a class="btn btn-primary btn-sm" asp-action="Formation" asp-route-id="@e.Id">Continuer</a>
+                @if (e.Certificate is not null)
+                {
+                    <a class="btn btn-ghost btn-sm" asp-action="Certificate" asp-route-id="@e.Certificate.Id">Certificat</a>
+                }
+            </article>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="panel">Aucune inscription pour l'instant. <a asp-controller="Catalog" asp-action="Index">Parcourir le catalogue</a></div>
+    }
+
+    <div class="section">
+        <h2>Derniers quiz</h2>
+        <div class="panel">
+            <table>
+                <thead><tr><th>Quiz</th><th>Score</th><th>Résultat</th><th>Date</th></tr></thead>
+                <tbody>
+                @foreach (var a in attempts)
+                {
+                    <tr>
+                        <td>@a.Quiz.Title</td>
+                        <td>@a.ScorePercent %</td>
+                        <td>@(a.Passed ? "Réussi" : "À retravailler")</td>
+                        <td>@a.SubmittedAt?.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

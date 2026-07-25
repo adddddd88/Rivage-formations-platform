@@ -1,0 +1,30 @@
+@model IEnumerable<Formation>
+@{
+    ViewData["Title"] = "Accueil";
+}
+<section class="hero">
+    <div class="badge">Plateforme de formations</div>
+    <h1>Rivage</h1>
+    <p>Du rivage de la découverte au large de la maîtrise. Parcours guidés, quiz, et formateur IA pour apprendre à l'oral.</p>
+    <div class="cta-row">
+        <a class="btn btn-primary" asp-controller="Catalog" asp-action="Index">Explorer le catalogue</a>
+        <a class="btn btn-accent" asp-controller="Account" asp-action="Register">Commencer</a>
+    </div>
+</section>
+
+<section class="container section">
+    <h2>Formations à la une</h2>
+    <p class="lede">Des parcours concrets, publiés et prêts à suivre.</p>
+    <div class="grid grid-3">
+        @foreach (var f in Model)
+        {
+            <article class="panel">
+                <span class="badge">@f.Category.Name</span>
+                <h3>@f.Title</h3>
+                <p class="meta">@f.Level · @f.DurationHours h</p>
+                <p>@f.ShortDescription</p>
+                <a class="btn btn-ghost btn-sm" asp-controller="Catalog" asp-action="Details" asp-route-slug="@f.Slug">Voir</a>
+            </article>
+        }
+    </div>
+</section>

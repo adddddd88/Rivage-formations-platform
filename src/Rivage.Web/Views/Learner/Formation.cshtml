@@ -1,0 +1,33 @@
+@model Enrollment
+@{
+    ViewData["Title"] = Model.Formation.Title;
+}
+<div class="container section">
+    <h2>@Model.Formation.Title</h2>
+    <p class="lede">Progression @Model.ProgressPercent %</p>
+    <div class="progress" style="margin-bottom:1.25rem"><span style="width:@Model.ProgressPercent%"></span></div>
+
+    <div class="grid" style="gap:.75rem">
+        @foreach (var m in Model.Formation.Modules.OrderBy(x => x.OrderIndex))
+        {
+            var done = Model.ModuleProgresses.Any(p => p.ModuleId == m.Id && p.IsCompleted);
+            <div class="panel" style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap">
+                <div>
+                    <span class="badge">@m.ContentType</span>
+                    @if (done) { <span class="badge badge-ok">Terminé</span> }
+                    <h3 style="margin-top:.4rem">@m.OrderIndex. @m.Title</h3>
+                    <p class="meta">@m.Summary</p>
+                </div>
+                <a class="btn btn-primary btn-sm" asp-action="Module" asp-route-id="@m.Id">Ouvrir</a>
+            </div>
+        }
+    </div>
+
+    @if (Model.Certificate is not null)
+    {
+        <div class="panel" style="margin-top:1rem">
+            <h3>Certificat disponible</h3>
+            <a class="btn btn-accent" asp-action="Certificate" asp-route-id="@Model.Certificate.Id">Voir le certificat</a>
+        </div>
+    }
+</div>

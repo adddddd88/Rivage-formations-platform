@@ -1,0 +1,34 @@
+@model Quiz
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+    <div>
+        <h2>@Model.Title</h2>
+        <p class="meta">Module : @Model.Module.Title</p>
+    </div>
+    <a class="btn btn-primary btn-sm" href="/Admin/Quizzes/CreateQuestion?quizId=@Model.Id">Ajouter une question</a>
+</div>
+<div class="panel" style="margin-top:1rem">
+    @foreach (var q in Model.Questions.OrderBy(x => x.OrderIndex))
+    {
+        <div style="padding:.85rem 0;border-bottom:1px solid var(--line)">
+            <strong>@q.OrderIndex. @q.Text</strong>
+            <span class="badge">@q.Type</span>
+            <ul>
+                @foreach (var o in q.Options.OrderBy(x => x.OrderIndex))
+                {
+                    <li>@(o.IsCorrect ? "✓ " : "")@o.Text</li>
+                }
+            </ul>
+            <div style="display:flex;gap:.35rem">
+                <a class="btn btn-ghost btn-sm" href="/Admin/Quizzes/EditQuestion/@q.Id">Modifier</a>
+                <form method="post" action="/Admin/Quizzes/DeleteQuestion/@q.Id" onsubmit="return confirm('Supprimer ?')">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>

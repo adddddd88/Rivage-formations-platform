@@ -1,0 +1,27 @@
+@model ModuleEditViewModel
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Nouveau module" : "Modifier module";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var action = Model.Id == 0 ? "Create" : "Edit";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post" asp-action="@action" class="form-stack panel" style="max-width:760px">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" asp-for="Id" />
+    <label asp-for="FormationId"><span>Formation</span><select asp-for="FormationId" asp-items="ViewBag.Formations"></select></label>
+    <label asp-for="Title"><span>Titre</span><input asp-for="Title" /></label>
+    <label asp-for="Summary"><span>Résumé</span><textarea asp-for="Summary"></textarea></label>
+    <label asp-for="Content"><span>Contenu</span><textarea asp-for="Content" rows="8"></textarea></label>
+    <label asp-for="OrderIndex"><span>Ordre</span><input asp-for="OrderIndex" /></label>
+    <label asp-for="EstimatedMinutes"><span>Minutes</span><input asp-for="EstimatedMinutes" /></label>
+    <label asp-for="ContentType"><span>Type</span><select asp-for="ContentType" asp-items="Html.GetEnumSelectList<ModuleContentType>()"></select></label>
+    <label style="display:flex;gap:.5rem;align-items:center"><input asp-for="IsPublished" /> Publié</label>
+    <hr style="border:0;border-top:1px solid var(--line);width:100%" />
+    <h3>Exercice (si type Exercice)</h3>
+    <label asp-for="ExerciseInstructions"><span>Instructions</span><textarea asp-for="ExerciseInstructions"></textarea></label>
+    <label asp-for="ExerciseHint"><span>Indice</span><input asp-for="ExerciseHint" /></label>
+    <h3>Quiz (si type Quiz)</h3>
+    <label asp-for="QuizTitle"><span>Titre quiz</span><input asp-for="QuizTitle" /></label>
+    <label asp-for="PassingScorePercent"><span>Seuil %</span><input asp-for="PassingScorePercent" /></label>
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+</form>

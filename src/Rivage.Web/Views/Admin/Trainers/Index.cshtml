@@ -1,0 +1,31 @@
+@model IEnumerable<TrainerProfile>
+@{
+    ViewData["Title"] = "Formateurs";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Formateurs</h2>
+    <a class="btn btn-primary btn-sm" href="/Admin/Trainers/Create">Nouveau</a>
+</div>
+<div class="panel" style="margin-top:1rem">
+    <table>
+        <thead><tr><th>Nom</th><th>Email</th><th>Spécialité</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.User.FullName</td>
+                <td>@t.User.Email</td>
+                <td>@t.Specialty</td>
+                <td style="display:flex;gap:.35rem">
+                    <a class="btn btn-ghost btn-sm" href="/Admin/Trainers/Edit/@t.Id">Modifier</a>
+                    <form method="post" action="/Admin/Trainers/Delete/@t.Id" onsubmit="return confirm('Supprimer ?')">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

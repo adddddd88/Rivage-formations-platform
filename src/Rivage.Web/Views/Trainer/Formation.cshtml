@@ -1,0 +1,42 @@
+@model Formation
+@{
+    ViewData["Title"] = Model.Title;
+    var attempts = (IEnumerable<QuizAttempt>)ViewBag.Attempts;
+}
+<div class="container section">
+    <h2>@Model.Title</h2>
+    <div class="grid grid-2">
+        <div class="panel">
+            <h3>Apprenants inscrits</h3>
+            <table>
+                <thead><tr><th>Nom</th><th>Progression</th><th>Statut</th></tr></thead>
+                <tbody>
+                @foreach (var e in Model.Enrollments)
+                {
+                    <tr>
+                        <td>@e.User.FullName</td>
+                        <td>@e.ProgressPercent %</td>
+                        <td>@e.Status</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="panel">
+            <h3>Résultats quiz</h3>
+            <table>
+                <thead><tr><th>Apprenant</th><th>Quiz</th><th>Score</th></tr></thead>
+                <tbody>
+                @foreach (var a in attempts)
+                {
+                    <tr>
+                        <td>@a.User.FullName</td>
+                        <td>@a.Quiz.Title</td>
+                        <td>@a.ScorePercent % @(a.Passed ? "✓" : "")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

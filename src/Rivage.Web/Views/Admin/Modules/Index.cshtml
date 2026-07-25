@@ -1,0 +1,37 @@
+@model IEnumerable<Module>
+@{
+    ViewData["Title"] = "Modules";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+    <h2>Modules / cours</h2>
+    <a class="btn btn-primary btn-sm" href="/Admin/Modules/Create?formationId=@ViewBag.FormationId">Nouveau</a>
+</div>
+<form method="get" class="panel" style="display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0">
+    <select name="formationId" asp-items="ViewBag.Formations"><option value="">Toutes formations</option></select>
+    <input type="text" name="search" value="@ViewBag.Search" placeholder="Rechercher…" />
+    <button class="btn btn-ghost" type="submit">Filtrer</button>
+</form>
+<div class="panel">
+    <table>
+        <thead><tr><th>Formation</th><th>Ordre</th><th>Titre</th><th>Type</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@m.Formation.Title</td>
+                <td>@m.OrderIndex</td>
+                <td>@m.Title</td>
+                <td>@m.ContentType</td>
+                <td style="display:flex;gap:.35rem">
+                    <a class="btn btn-ghost btn-sm" href="/Admin/Modules/Edit/@m.Id">Modifier</a>
+                    <form method="post" action="/Admin/Modules/Delete/@m.Id" onsubmit="return confirm('Supprimer ?')">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

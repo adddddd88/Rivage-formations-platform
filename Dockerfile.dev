@@ -1,0 +1,18 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+WORKDIR /src
+
+RUN dotnet tool install --global dotnet-ef --version 8.0.11
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+COPY Rivage.sln ./
+COPY src/Rivage.Domain/Rivage.Domain.csproj src/Rivage.Domain/
+COPY src/Rivage.Infrastructure/Rivage.Infrastructure.csproj src/Rivage.Infrastructure/
+COPY src/Rivage.Web/Rivage.Web.csproj src/Rivage.Web/
+COPY tests/Rivage.Tests/Rivage.Tests.csproj tests/Rivage.Tests/
+RUN dotnet restore Rivage.sln
+
+COPY scripts/entrypoint.dev.sh /entrypoint.dev.sh
+RUN chmod +x /entrypoint.dev.sh
+
+EXPOSE 8080
+ENTRYPOINT ["/entrypoint.dev.sh"]

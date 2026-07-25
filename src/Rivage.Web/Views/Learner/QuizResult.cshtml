@@ -1,0 +1,35 @@
+@model QuizAttempt
+@{
+    ViewData["Title"] = "Résultat du quiz";
+}
+<div class="container section">
+    <h2>@Model.Quiz.Title</h2>
+    <div class="panel">
+        <p>Score : <strong>@Model.ScorePercent %</strong> (@Model.EarnedPoints / @Model.MaxPoints)</p>
+        <p>
+            @if (Model.Passed)
+            {
+                <span class="badge badge-ok">Réussi</span>
+            }
+            else
+            {
+                <span class="badge badge-warn">Non réussi</span>
+            }
+        </p>
+        <a class="btn btn-primary" asp-action="Module" asp-route-id="@Model.Quiz.ModuleId">Retour au module</a>
+        <a class="btn btn-ghost" asp-action="Index">Mon parcours</a>
+    </div>
+    <div class="panel" style="margin-top:1rem">
+        <h3>Détail</h3>
+        <ul>
+            @foreach (var a in Model.Answers)
+            {
+                <li style="margin-bottom:.6rem">
+                    <strong>@a.Question.Text</strong><br />
+                    Votre réponse : @(a.SelectedOption?.Text ?? "—")
+                    · @(a.IsCorrect ? "Correct" : "Incorrect")
+                </li>
+            }
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16
+    container_name: rivage-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rivage}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Rivage_Pg_S3cure!}
+      POSTGRES_DB: ${POSTGRES_DB:-RivageDb}
+    ports:
+      - "5433:5432"
+    volumes:
+      - rivage_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dockeronly
+    container_name: rivage-web
+    env_file:
+      - .env
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+      Anam__ApiKey: ${ANAM_API_KEY:-}
+      ANAM_API_KEY: ${ANAM_API_KEY:-}
+      ANAM_AVATAR_ID: ${ANAM_AVATAR_ID:-}
+      ANAM_AVATAR_MODEL: ${ANAM_AVATAR_MODEL:-}
+      ANAM_VOICE_ID: ${ANAM_VOICE_ID:-}
+      ANAM_LLM_ID: ${ANAM_LLM_ID:-}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@rivage.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-Rivage@Admin2026!}
+    ports:
+      - "${APP_PORT:-5011}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  rivage_pgdata:

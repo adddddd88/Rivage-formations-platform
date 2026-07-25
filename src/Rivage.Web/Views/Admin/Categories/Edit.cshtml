@@ -1,0 +1,15 @@
+@model CategoryEditViewModel
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Nouvelle catégorie" : "Modifier catégorie";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var action = Model.Id == 0 ? "Create" : "Edit";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post" asp-action="@action" class="form-stack panel">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" asp-for="Id" />
+    <label asp-for="Name"><span>Nom</span><input asp-for="Name" /></label>
+    <label asp-for="Description"><span>Description</span><textarea asp-for="Description"></textarea></label>
+    <label style="display:flex;gap:.5rem;align-items:center"><input asp-for="IsActive" /> Active</label>
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+</form>

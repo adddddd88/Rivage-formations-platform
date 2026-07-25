@@ -1,0 +1,22 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Inscription";
+}
+<div class="container section">
+    <h2>Créer un compte apprenant</h2>
+    <p class="lede">Inscription rapide — confirmation email en mode démo (case à cocher).</p>
+    <form asp-action="Register" method="post" class="form-stack panel">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <label asp-for="FirstName"><span>Prénom</span><input asp-for="FirstName" /></label>
+        <label asp-for="LastName"><span>Nom</span><input asp-for="LastName" /></label>
+        <label asp-for="Email"><span>Email</span><input asp-for="Email" /></label>
+        <label asp-for="Password"><span>Mot de passe</span><input asp-for="Password" /></label>
+        <label asp-for="ConfirmPassword"><span>Confirmer</span><input asp-for="ConfirmPassword" /></label>
+        <label style="display:flex;align-items:flex-start;gap:.55rem;font-weight:600">
+            <input asp-for="ConfirmEmailValid" style="margin-top:.25rem" />
+            <span>Je confirme que mon adresse email est valide <span class="meta">(pas d'envoi SMTP en démo)</span></span>
+        </label>
+        <span asp-validation-for="ConfirmEmailValid" class="text-danger"></span>
+        <button class="btn btn-primary" type="submit">Créer mon compte</button>
+    </form>
+</div>

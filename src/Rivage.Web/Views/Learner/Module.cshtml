@@ -1,0 +1,86 @@
+@model Module
+@{
+    ViewData["Title"] = Model.Title;
+    var enrollment = (Enrollment)ViewBag.Enrollment;
+    var progress = ViewBag.Progress as ModuleProgress;
+}
+<div class="container section">
+    <p class="meta"><a asp-action="Formation" asp-route-id="@enrollment.Id">← @Model.Formation.Title</a></p>
+    <h2>@Model.Title</h2>
+    <p class="lede">@Model.Summary</p>
+
+    <div class="grid grid-2">
+        <div class="panel">
+            <h3>Contenu</h3>
+            <div style="white-space:pre-wrap;line-height:1.65">@Model.Content</div>
+
+            @if (Model.ContentType == ModuleContentType.Lesson)
+            {
+                <form asp-action="CompleteLesson" method="post" style="margin-top:1rem">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="moduleId" value="@Model.Id" />
+                    <button class="btn btn-primary" type="submit" disabled="@(progress?.IsCompleted == true)">
+                        @(progress?.IsCompleted == true ? "Déjà terminé" : "Marquer comme terminé")
+                    </button>
+                </form>
+            }
+
+            @if (Model.ContentType == ModuleContentType.Exercise && Model.Exercise is not null)
+            {
+                <form asp-action="SubmitExercise" method="post" class="form-stack" style="margin-top:1rem;max-width:none">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="moduleId" value="@Model.Id" />
+                    <h3>Exercice</h3>
+                    <p>@Model.Exercise.Instructions</p>
+                    @if (!string.IsNullOrWhiteSpace(Model.Exercise.SolutionHint))
+                    {
+                        <p class="meta">Indice : @Model.Exercise.SolutionHint</p>
+                    }
+                    <label><span>Votre réponse</span><textarea name="response">@progress?.ExerciseResponse</textarea></label>
+                    <button class="btn btn-primary" type="submit">Envoyer</button>
+                </form>
+            }
+
+            @if (Model.ContentType == ModuleContentType.Quiz && Model.Quiz is not null)
+            {
+                <form asp-action="SubmitQuiz" method="post" class="form-stack" style="margin-top:1rem;max-width:none">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="quizId" value="@Model.Quiz.Id" />
+                    <h3>@Model.Quiz.Title</h3>
+                    <p class="meta">@Model.Quiz.Instructions · Seuil @Model.Quiz.PassingScorePercent %</p>
+                    @{ var qi = 0; }
+                    @foreach (var q in Model.Quiz.Questions.OrderBy(x => x.OrderIndex))
+                    {
+                        qi++;
+                        <fieldset style="border:1px solid var(--line);border-radius:12px;padding:.85rem">
+                            <legend><strong>@qi.</strong> @q.Text</legend>
+                            @foreach (var opt in q.Options.OrderBy(o => o.OrderIndex))
+                            {
+                                <label style="display:flex;gap:.5rem;align-items:center;font-weight:500;margin:.35rem 0">
+                                    <input type="radio" name="answers[@q.Id]" value="@opt.Id" required />
+                                    <span>@opt.Text</span>
+                                </label>
+                            }
+                        </fieldset>
+                    }
+                    <button class="btn btn-accent" type="submit">Soumettre le quiz</button>
+                </form>
+            }
+        </div>
+
+        <aside class="ai-panel">
+            <h3 style="margin:0;font-family:var(--font-display)">Formateur IA</h3>
+            <p id="ai-status" style="margin:0;color:#cfe3e0">Prêt à présenter ce module à l'oral.</p>
+            <video id="persona-video" autoplay playsinline muted></video>
+            <div class="ai-actions">
+                <button type="button" class="btn btn-accent btn-sm" onclick="RivageAi.startSession(@Model.Id)">Présenter le module</button>
+                <button type="button" class="btn btn-ghost btn-sm" style="color:#fff;border-color:#ffffff44" onclick="RivageAi.stop()">Stop</button>
+            </div>
+            <label style="color:#fff"><span>Posez une question</span>
+                <input id="ai-question" type="text" placeholder="Ex. Peux-tu reformuler l'idée clé ?" />
+            </label>
+            <button type="button" class="btn btn-primary btn-sm" onclick="RivageAi.ask(@Model.Id)">Demander (audio)</button>
+            <div id="ai-log" class="ai-log"></div>
+        </aside>
+    </div>
+</div>

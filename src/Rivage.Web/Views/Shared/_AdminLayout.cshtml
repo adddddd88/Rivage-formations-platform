@@ -1,0 +1,20 @@
+@{
+    Layout = "_Layout";
+}
+<div class="container admin-shell">
+    <aside class="admin-nav">
+        <div class="title">Administration</div>
+        <a href="/Admin">Tableau de bord</a>
+        <a href="/Admin/Categories">Catégories</a>
+        <a href="/Admin/Formations">Formations</a>
+        <a href="/Admin/Modules">Modules</a>
+        <a href="/Admin/Trainers">Formateurs</a>
+        <a href="/Admin/Quizzes">Quiz / Examens</a>
+    </aside>
+    <div>
+        @RenderBody()
+    </div>
+</div>
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

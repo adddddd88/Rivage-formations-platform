@@ -1,0 +1,25 @@
+@model IEnumerable<Quiz>
+@{
+    ViewData["Title"] = "Quiz";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Quiz / Examens</h2>
+<p class="lede">Gérez les banques de questions par module quiz.</p>
+<div class="panel">
+    <table>
+        <thead><tr><th>Formation</th><th>Module</th><th>Quiz</th><th>Questions</th><th>Seuil</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var q in Model)
+        {
+            <tr>
+                <td>@q.Module.Formation.Title</td>
+                <td>@q.Module.Title</td>
+                <td>@q.Title</td>
+                <td>@q.Questions.Count</td>
+                <td>@q.PassingScorePercent %</td>
+                <td><a class="btn btn-ghost btn-sm" href="/Admin/Quizzes/Questions/@q.Id">Questions</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

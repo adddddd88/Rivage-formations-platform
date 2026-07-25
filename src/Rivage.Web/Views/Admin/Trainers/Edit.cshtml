@@ -1,0 +1,20 @@
+@model TrainerEditViewModel
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Nouveau formateur" : "Modifier formateur";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var action = Model.Id == 0 ? "Create" : "Edit";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post" asp-action="@action" class="form-stack panel">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="UserId" />
+    <label asp-for="FirstName"><span>Prénom</span><input asp-for="FirstName" /></label>
+    <label asp-for="LastName"><span>Nom</span><input asp-for="LastName" /></label>
+    <label asp-for="Email"><span>Email</span><input asp-for="Email" /></label>
+    <label asp-for="Specialty"><span>Spécialité</span><input asp-for="Specialty" /></label>
+    <label asp-for="Bio"><span>Bio</span><textarea asp-for="Bio"></textarea></label>
+    <label asp-for="Password"><span>Mot de passe @(Model.Id == 0 ? "" : "(optionnel)")</span><input asp-for="Password" /></label>
+    <label style="display:flex;gap:.5rem;align-items:center"><input asp-for="IsActive" /> Actif</label>
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+</form>

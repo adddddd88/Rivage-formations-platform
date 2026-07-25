@@ -1,0 +1,60 @@
+@model IEnumerable<Formation>
+@{
+    ViewData["Title"] = "Catalogue";
+    var categories = (IEnumerable<Category>)ViewBag.Categories;
+    int page = ViewBag.Page ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+}
+<div class="container section">
+    <h2>Catalogue des formations</h2>
+    <p class="lede">Filtrez par catégorie ou recherchez un thème.</p>
+
+    <form method="get" class="panel" style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:end;margin-bottom:1rem">
+        <label style="flex:1;min-width:180px"><span>Recherche</span><input type="text" name="q" value="@ViewBag.Search" placeholder="Ex. product, data…" /></label>
+        <label style="min-width:180px"><span>Catégorie</span>
+            <select name="categoryId">
+                <option value="">Toutes</option>
+                @foreach (var c in categories)
+                {
+                    if (ViewBag.CategoryId as int? == c.Id)
+                    {
+                        <option value="@c.Id" selected>@c.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@c.Id">@c.Name</option>
+                    }
+                }
+            </select>
+        </label>
+        <button class="btn btn-primary" type="submit">Filtrer</button>
+    </form>
+
+    <div class="grid grid-3">
+        @foreach (var f in Model)
+        {
+            <article class="panel">
+                <span class="badge">@f.Category.Name</span>
+                <h3>@f.Title</h3>
+                <p class="meta">@f.Level · @f.DurationHours h
+                    @if (f.TrainerProfile?.User is not null)
+                    {
+                        <text>· @f.TrainerProfile.User.FullName</text>
+                    }
+                </p>
+                <p>@f.ShortDescription</p>
+                <a class="btn btn-ghost btn-sm" asp-action="Details" asp-route-slug="@f.Slug">Détails</a>
+            </article>
+        }
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <div style="margin-top:1rem;display:flex;gap:.5rem">
+            @for (var i = 1; i <= totalPages; i++)
+            {
+                <a class="btn btn-ghost btn-sm" asp-action="Index" asp-route-page="@i" asp-route-q="@ViewBag.Search" asp-route-categoryId="@ViewBag.CategoryId">@i</a>
+            }
+        </div>
+    }
+</div>

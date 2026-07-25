@@ -1,0 +1,26 @@
+@model FormationEditViewModel
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Nouvelle formation" : "Modifier formation";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var action = Model.Id == 0 ? "Create" : "Edit";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post" asp-action="@action" class="form-stack panel" style="max-width:720px">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" asp-for="Id" />
+    <label asp-for="Title"><span>Titre</span><input asp-for="Title" /></label>
+    <label asp-for="ShortDescription"><span>Résumé</span><textarea asp-for="ShortDescription"></textarea></label>
+    <label asp-for="Description"><span>Description</span><textarea asp-for="Description" rows="6"></textarea></label>
+    <label asp-for="CategoryId"><span>Catégorie</span><select asp-for="CategoryId" asp-items="ViewBag.Categories"></select></label>
+    <label asp-for="TrainerProfileId"><span>Formateur</span><select asp-for="TrainerProfileId" asp-items="ViewBag.Trainers"><option value="">—</option></select></label>
+    <label asp-for="DurationHours"><span>Durée (h)</span><input asp-for="DurationHours" /></label>
+    <label asp-for="Level"><span>Niveau</span>
+        <select asp-for="Level">
+            <option>Débutant</option>
+            <option>Intermédiaire</option>
+            <option>Avancé</option>
+        </select>
+    </label>
+    <label style="display:flex;gap:.5rem;align-items:center"><input asp-for="IsPublished" /> Publiée</label>
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+</form>

@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Administration";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var recent = (IEnumerable<Enrollment>)ViewBag.RecentEnrollments;
+}
+<h2>Tableau de bord</h2>
+<p class="lede">Vue d'ensemble de la plateforme Rivage.</p>
+<div class="grid grid-3" style="margin-bottom:1.25rem">
+    <div class="panel"><h3>@ViewBag.Formations</h3><p class="meta">Formations</p></div>
+    <div class="panel"><h3>@ViewBag.Enrollments</h3><p class="meta">Inscriptions</p></div>
+    <div class="panel"><h3>@ViewBag.Quizzes</h3><p class="meta">Quiz</p></div>
+</div>
+<div class="panel">
+    <h3>Dernières inscriptions</h3>
+    <table>
+        <thead><tr><th>Apprenant</th><th>Formation</th><th>Date</th></tr></thead>
+        <tbody>
+        @foreach (var e in recent)
+        {
+            <tr>
+                <td>@e.User.FullName</td>
+                <td>@e.Formation.Title</td>
+                <td>@e.EnrolledAt.ToLocalTime().ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

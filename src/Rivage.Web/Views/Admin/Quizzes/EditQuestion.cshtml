@@ -1,0 +1,29 @@
+@model QuizQuestionEditViewModel
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Nouvelle question" : "Modifier question";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var action = Model.Id == 0 ? "CreateQuestion" : "EditQuestion";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post" asp-action="@action" class="form-stack panel" style="max-width:720px">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="QuizId" />
+    <label asp-for="Text"><span>Énoncé</span><textarea asp-for="Text"></textarea></label>
+    <label asp-for="Type"><span>Type</span><select asp-for="Type" asp-items="Html.GetEnumSelectList<QuestionType>()"></select></label>
+    <label asp-for="Points"><span>Points</span><input asp-for="Points" /></label>
+    <label asp-for="OrderIndex"><span>Ordre</span><input asp-for="OrderIndex" /></label>
+    <h3>Options</h3>
+    @for (var i = 0; i < Model.Options.Count; i++)
+    {
+        <div style="display:grid;grid-template-columns:1fr auto;gap:.5rem;align-items:center">
+            <input asp-for="Options[i].Text" placeholder="Option @(i+1)" />
+            <label style="display:flex;gap:.35rem;align-items:center;font-weight:600">
+                <input asp-for="Options[i].IsCorrect" /> Correcte
+            </label>
+            <input type="hidden" asp-for="Options[i].Id" />
+        </div>
+    }
+    <p class="meta">Pour Vrai/Faux, cochez « Correcte » sur Vrai si la réponse est vraie (sinon Faux sera correct).</p>
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+</form>

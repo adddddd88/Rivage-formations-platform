@@ -1,0 +1,23 @@
+# Full-stack Docker without pulling mcr.microsoft.com (uses a local base image).
+# Runtime is self-contained — published on the host before `docker compose build`.
+FROM postgres:16
+
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+         ca-certificates \
+         libicu76 \
+         libssl3t64 \
+         libstdc++6 \
+         zlib1g \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY publish/ ./
+
+ENV ASPNETCORE_URLS=http://+:8080 \
+    DOTNET_EnableDiagnostics=0 \
+    ASPNETCORE_ENVIRONMENT=Development
+
+EXPOSE 8080
+ENTRYPOINT ["./Rivage.Web"]

@@ -1,0 +1,38 @@
+@model PagedResult<Formation>
+@{
+    ViewData["Title"] = "Formations";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap">
+    <h2>Formations</h2>
+    <a class="btn btn-primary btn-sm" href="/Admin/Formations/Create">Nouvelle</a>
+</div>
+<form method="get" class="panel" style="display:flex;gap:.75rem;flex-wrap:wrap;margin:1rem 0">
+    <input type="text" name="search" value="@Model.Search" placeholder="Rechercher…" />
+    <select name="categoryId" asp-items="ViewBag.Categories"><option value="">Toutes catégories</option></select>
+    <button class="btn btn-ghost" type="submit">Filtrer</button>
+</form>
+<div class="panel">
+    <table>
+        <thead><tr><th>Titre</th><th>Catégorie</th><th>Formateur</th><th>Publiée</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var f in Model.Items)
+        {
+            <tr>
+                <td>@f.Title</td>
+                <td>@f.Category.Name</td>
+                <td>@(f.TrainerProfile?.User.FullName ?? "—")</td>
+                <td>@(f.IsPublished ? "Oui" : "Non")</td>
+                <td style="display:flex;gap:.35rem;flex-wrap:wrap">
+                    <a class="btn btn-ghost btn-sm" href="/Admin/Modules?formationId=@f.Id">Modules</a>
+                    <a class="btn btn-ghost btn-sm" href="/Admin/Formations/Edit/@f.Id">Modifier</a>
+                    <form method="post" action="/Admin/Formations/Delete/@f.Id" onsubmit="return confirm('Supprimer ?')">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

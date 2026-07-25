@@ -1,0 +1,20 @@
+@model IEnumerable<Formation>
+@{
+    ViewData["Title"] = "Espace formateur";
+}
+<div class="container section">
+    <h2>Espace formateur</h2>
+    <p class="lede">Formations assignées, apprenants et résultats.</p>
+    <div class="grid grid-2">
+        @foreach (var f in Model)
+        {
+            <article class="panel">
+                <span class="badge">@f.Category.Name</span>
+                <h3>@f.Title</h3>
+                <p class="meta">@f.Enrollments.Count inscrits · @f.Modules.Count modules</p>
+                <a class="btn btn-primary btn-sm" asp-action="Formation" asp-route-id="@f.Id">Voir détails</a>
+                <a class="btn btn-ghost btn-sm" href="/Admin/Modules?formationId=@f.Id">Gérer modules</a>
+            </article>
+        }
+    </div>
+</div>
