@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Rivage.Domain.Entities;
 using Rivage.Domain.Interfaces;
 using Rivage.Infrastructure.Data;
@@ -14,12 +15,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddRivageInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? Environment.GetEnvironmentVariable("CONNECTION_STRING")
-            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is missing.");
-
-        services.AddDbContext<RivageDbContext>(options =>
-            options.UseNpgsql(connectionString));
+        services.AddDbContext<RivageDbContext>((sp, options) =>
+        {
+            var env = sp.GetService<IHostEnvironment>();
+            var connectionString = ConnectionStringResolver.Resolve(configuration, env);
+            options.UseNpgsql(connectionString);
+        });
 
         services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {

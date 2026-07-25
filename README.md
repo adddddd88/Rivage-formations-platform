@@ -119,6 +119,25 @@ Copier `.env.example` vers `.env` (ne jamais committer `.env`).
 | `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` | Compte admin initial |
 | `ANAM_API_KEY` | Clé Anam.ai (optionnel ; sans clé → mode mock audio) |
 
+### Déploiement Railway (important)
+
+Le crash « Crashed » au démarrage vient en général d’une **base absente** ou d’une **connection string localhost**.
+
+1. Dans le projet Railway : **+ New** → **Database** → **PostgreSQL**
+2. Sur le service **web** → **Variables** → ajouter :
+
+```text
+ASPNETCORE_ENVIRONMENT=Production
+SEED_ADMIN_EMAIL=admin@rivage.local
+SEED_ADMIN_PASSWORD=Rivage@Admin2026!
+ConnectionStrings__DefaultConnection=Host=${{Postgres.PGHOST}};Port=${{Postgres.PGPORT}};Database=${{Postgres.PGDATABASE}};Username=${{Postgres.PGUSER}};Password=${{Postgres.PGPASSWORD}};SSL Mode=Require;Trust Server Certificate=true
+```
+
+(Remplacez `Postgres` par le nom exact du service DB si différent — utilisez le sélecteur de variables Railway.)
+
+3. **Settings → Networking → Generate Domain**
+4. Redeploy le service web
+
 ---
 
 ## Formateur IA (bref)
