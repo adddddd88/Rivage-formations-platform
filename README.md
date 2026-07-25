@@ -159,9 +159,3 @@ Ou via Docker :
 ```bash
 docker compose -f docker-compose.test.yml run --rm tests
 ```
-
----
-
-## Licence
-
-Projet académique — usage pédagogique.
