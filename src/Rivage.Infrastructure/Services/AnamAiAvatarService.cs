@@ -92,8 +92,6 @@ public class AnamAiAvatarService : IAiAvatarService
 
     public async Task<AiAvatarAskResult> AskAsync(AiAvatarAskRequest request, CancellationToken cancellationToken = default)
     {
-        // Oral Q&A is handled by the Anam WebRTC persona when live.
-        // For mock / text fallback we always provide a useful answer.
         return await _fallback.AskAsync(request, cancellationToken);
     }
 

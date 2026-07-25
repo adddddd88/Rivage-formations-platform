@@ -33,7 +33,6 @@ public class RegisterViewModel
     [Required, DataType(DataType.Password), Compare(nameof(Password), ErrorMessage = "Les mots de passe ne correspondent pas."), Display(Name = "Confirmer")]
     public string ConfirmPassword { get; set; } = string.Empty;
 
-    /// <summary>Demo checkbox: marks email as confirmed without SMTP.</summary>
     [Display(Name = "Je confirme que mon adresse email est valide")]
     [Range(typeof(bool), "true", "true", ErrorMessage = "Veuillez confirmer votre email.")]
     public bool ConfirmEmailValid { get; set; }

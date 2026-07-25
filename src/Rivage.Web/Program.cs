@@ -4,7 +4,6 @@ using Rivage.Infrastructure.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Railway / reverse proxy: honor X-Forwarded-* and PORT
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrWhiteSpace(port))
 {

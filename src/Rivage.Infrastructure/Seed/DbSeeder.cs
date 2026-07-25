@@ -108,7 +108,6 @@ public class DbSeeder
         foreach (var l in learnerSpecs)
             learners.Add(await EnsureUserAsync(l.Email, "Rivage@Learner2026!", l.First, l.Last, AppRoles.Learner));
 
-        // 22 parcours (catégories)
         var parcoursDefs = new (string Name, string Description)[]
         {
             ("Product Management", "Cadrer, prioriser et livrer de la valeur produit."),
@@ -147,7 +146,6 @@ public class DbSeeder
         _db.Categories.AddRange(categories);
         await _db.SaveChangesAsync();
 
-        // 42 formations réparties sur les parcours
         var formationTitles = BuildFormationCatalog();
         var formations = new List<Formation>();
         var rng = new Random(42);
@@ -174,7 +172,7 @@ public class DbSeeder
                 TrainerProfileId = trainer.Id,
                 DurationHours = hours,
                 Level = level,
-                IsPublished = i % 11 != 10, // quelques brouillons
+                IsPublished = i % 11 != 10,
                 CreatedAt = DateTime.UtcNow.AddDays(-rng.Next(1, 120))
             });
         }
@@ -188,7 +186,7 @@ public class DbSeeder
 
         foreach (var formation in formations)
         {
-            var moduleCount = 4 + (formation.Id % 3); // 4 à 6 modules
+            var moduleCount = 4 + (formation.Id % 3);
             for (var order = 1; order <= moduleCount; order++)
             {
                 var type = order switch
@@ -198,7 +196,6 @@ public class DbSeeder
                     _ => ModuleContentType.Lesson
                 };
 
-                // éviter deux quiz consécutifs trop tôt
                 if (order == moduleCount - 1 && type == ModuleContentType.Quiz)
                     type = ModuleContentType.Lesson;
 
@@ -258,7 +255,6 @@ public class DbSeeder
         _db.Quizzes.AddRange(quizzes);
         await _db.SaveChangesAsync();
 
-        // quelques inscriptions démo
         var published = formations.Where(f => f.IsPublished).Take(12).ToList();
         var enrollments = new List<Enrollment>();
         for (var i = 0; i < learners.Count; i++)

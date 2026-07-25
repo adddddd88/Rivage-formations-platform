@@ -2,10 +2,6 @@ using Rivage.Domain.Interfaces;
 
 namespace Rivage.Infrastructure.Services;
 
-/// <summary>
-/// Fallback avatar when Anam.ai API key is missing or the remote call fails.
-/// Client uses browser SpeechSynthesis for oral presentation.
-/// </summary>
 public class MockAiAvatarService : IAiAvatarService
 {
     public bool IsConfigured => false;
